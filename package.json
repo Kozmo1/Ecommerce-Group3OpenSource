@@ -9,8 +9,12 @@
     "build": "tsc"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Kozmo1/Ecommerce-Group3OpenSource.git"
+    "build": "rimraf dist && npx tsc",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "preserve": "npm run build",
+    "serve": "cross-env NODE_ENV=local concurrently \"npx tsc -w\"  \"nodemon dist/index.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -23,11 +27,18 @@
   "dependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.12.0",
+    "bcrpyt": "^2.0.0",
+    "bcrypt": "^5.1.1",
+    "dotenv-safe": "^9.1.0",
     "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "mongoose": "^8.10.0",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
+    "@types/dotenv-safe": "^8.1.6",
     "cors": "^2.8.5",
     "ts-node": "^10.9.2"
   }
