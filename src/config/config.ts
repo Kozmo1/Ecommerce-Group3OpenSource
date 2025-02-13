@@ -1,12 +1,23 @@
 import dotenv from "dotenv-safe";
 
-dotenv.config({allowEmptyValues: true, path: `.env.${process.env.NODE_ENV}`}); // Load environment variables from .env file
+// Load environment variables from .env file based on NODE_ENV or default to .env.local
+dotenv.config({ 
+    allowEmptyValues: true, 
+    path: `.env.${process.env.NODE_ENV || "local"}`, 
+    example: '.env.example' // Specify the example file explicitly
+});
 
-const ENVIRONMENT = process.env.NODE_ENV ?? "development"; // Set the environment to development if not specified
-const MONGO_HOST = process.env.MONGO_HOST ?? ""; // Get the MongoDB host from the environment variables
-const MONGO_DATABASE = process.env.MONGO_DATABASE ?? ""; // Get the MongoDB database from the environment variables
-const MONGO_PORT = process.env.MONGO_PASSWORD ?? ""; // Get the MongoDB port from the environment variables
-const MONGO_URL = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}`; // Create the MongoDB URL
+// Set the environment to development if not specified
+const ENVIRONMENT = process.env.NODE_ENV ?? "development";
+
+// MongoDB configuration from environment variables
+const MONGO_HOST = process.env.MONGO_HOST ?? "";
+const MONGO_DATABASE = process.env.MONGO_DATABASE ?? "";
+const MONGO_PORT = process.env.MONGO_PORT ?? "";
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD ?? ""; 
+
+// Create the MongoDB URL. Note: You might want to handle the password here if needed
+const MONGO_URL = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}`;
 
 export const config = { // Export the configuration object
     environment: ENVIRONMENT,
