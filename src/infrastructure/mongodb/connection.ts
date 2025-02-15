@@ -10,4 +10,4 @@ export const ConnectToDb = async () => { // Connect to the MongoDB database
     } catch (error) {
         console.error('Error connecting to MongoDB', error);
     }
-}
+};

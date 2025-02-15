@@ -3,7 +3,7 @@ import dotenv from "dotenv-safe";
 // Load environment variables from .env file based on NODE_ENV or default to .env.local
 dotenv.config({ 
     allowEmptyValues: true, 
-    path: `.env.${process.env.NODE_ENV || "local"}`, 
+    path: `.env.${process.env.NODE_ENV || "local"}`, // Load .env.local if NODE_ENV is not set
     example: '.env.example' // Specify the example file explicitly
 });
 
