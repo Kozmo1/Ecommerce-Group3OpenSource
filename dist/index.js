@@ -7,12 +7,18 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_safe_1 = __importDefault(require("dotenv-safe"));
 const user_1 = __importDefault(require("./ports/rest/routes/user"));
+const connection_1 = require("./infrastructure/mongodb/connection");
 const app = (0, express_1.default)();
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-dotenv_safe_1.default.config();
+dotenv_safe_1.default.config({
+    allowEmptyValues: true,
+    path: `.env.${process.env.NODE_ENV || 'local'}`,
+    example: '.env.example'
+});
 const port = process.env.PORT || 3000;
+(0, connection_1.ConnectToDb)();
 app.use("/healthcheck", (req, res) => {
     res.status(200).send("Server is running");
 });
