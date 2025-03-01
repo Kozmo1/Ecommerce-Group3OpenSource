@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { UserController } from '../../../controllers/userController';
 import { body } from 'express-validator';
+import { verifyToken } from "../../../middleware/auth";
 
 const router = express.Router();
 const userController = new UserController();
@@ -19,24 +20,24 @@ router.post("/login",
   (req: Request, res: Response, next: NextFunction) => userController.login(req, res, next));
 
   // Get user by ID
-router.get("/:id", 
-  (req: Request, res: Response, next: NextFunction) => userController.getUserById(req, res, next));
+// router.get("/:id", verifyToken,
+//   (req: Request, res: Response, next: NextFunction) => userController.getUserById(req, res, next));
 
-  // Update user
-router.put("/:id", 
-  (req: Request, res: Response, next: NextFunction) => userController.updateUser(req, res, next));
+//   // Update user
+// router.put("/:id", verifyToken,
+//   (req: Request, res: Response, next: NextFunction) => userController.updateUser(req, res, next));
 
-  // Delete user
-router.delete("/:id", 
-  (req: Request, res: Response, next: NextFunction) => userController.deleteUser(req, res, next));
+//   // Delete user
+// router.delete("/:id", verifyToken,
+//   (req: Request, res: Response, next: NextFunction) => userController.deleteUser(req, res, next));
 
-  // Logout user
-router.post("/logout",
-  (req: Request, res: Response, next: NextFunction) => userController.logout(req, res, next));
+//   // Logout user
+// router.post("/logout",
+//   (req: Request, res: Response, next: NextFunction) => userController.logout(req, res, next));
 
-  // Update taste profile
-router.post('/:id/taste-profile',
-  body('tasteProfile').isObject().withMessage('Taste profile must be an object'),
-  (req: Request, res: Response, next: NextFunction) => userController.updateTasteProfile(req, res, next));
+//   // Update taste profile
+// router.post('/:id/taste-profile', verifyToken,
+//   body('tasteProfile').isObject().withMessage('Taste profile must be an object'),
+//   (req: Request, res: Response, next: NextFunction) => userController.updateTasteProfile(req, res, next));
 
 export = router;

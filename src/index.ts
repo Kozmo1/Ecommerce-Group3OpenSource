@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from "dotenv-safe";
 import userRoutes from "./ports/rest/routes/user";
-import { ConnectToDb } from './infrastructure/mongodb/connection';
 
 
 const app = express();
@@ -17,7 +16,7 @@ dotenv.config({
   });
 
 const port = process.env.PORT || 3000;
-ConnectToDb();
+
 
 app.use("/healthcheck", (req, res) => {
     res.status(200).send("Server is running");
