@@ -15,7 +15,7 @@ dotenv_safe_1.default.config({
 // Set the environment to development if not specified
 const ENVIRONMENT = (_a = process.env.NODE_ENV) !== null && _a !== void 0 ? _a : "development";
 // Set the JWT secret (used for token verification in Node.js)
-const JWT_SECRET = (_b = process.env.JWT_SECRET) !== null && _b !== void 0 ? _b : "ThisIsMySuperSecretKeyForSchoolProject12345!";
+const JWT_SECRET = (_b = process.env.JWT_SECRET) !== null && _b !== void 0 ? _b : "";
 // Set the Brewery_DB_Service API URL
 const BREWERY_API_URL = (_c = process.env.BREWERY_API_URL) !== null && _c !== void 0 ? _c : "http://localhost:5089";
 exports.config = {

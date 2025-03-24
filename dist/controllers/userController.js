@@ -19,122 +19,119 @@ const config_1 = require("../config/config");
 class UserController {
     constructor() {
         this.breweryApiUrl = config_1.config.breweryApiUrl;
-        // Get user by ID (protected)
-        // public async getUserById(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
-        //   try {
-        //     const user = await User.findById(req.params.id).select("-password"); // Exclude password
-        //     if (!user) {
-        //       res.status(404).json({ message: "User not found" });
-        //       return;
-        //     }
-        //     res.status(200).json(user);
-        //   } catch (error) {
-        //     console.error("Error getting user", error);
-        //     res.status(500).json({ message: "Error getting user" });
-        //   }
-        // }
-        // // Update user by ID (protected)
-        // public async updateUser(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
-        //   try {
-        //     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-        //       new: true,
-        //       runValidators: true,
-        //     }).select("-password");
-        //     if (!updatedUser) {
-        //       res.status(404).json({ message: "User not found" });
-        //       return;
-        //     }
-        //     res.status(200).json(updatedUser);
-        //   } catch (error) {
-        //     console.error("Error updating user", error);
-        //     res.status(500).json({ message: "Error updating user" });
-        //   }
-        // }
-        // // Delete user by ID (protected)
-        // public async deleteUser(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
-        //   try {
-        //     const deletedUser = await User.findByIdAndDelete(req.params.id);
-        //     if (!deletedUser) {
-        //       res.status(404).json({ message: "User not found" });
-        //       return;
-        //     }
-        //     res.status(200).json({ message: "User deleted successfully" });
-        //   } catch (error) {
-        //     console.error("Error deleting user", error);
-        //     res.status(500).json({ message: "Error deleting user" });
-        //   }
-        // }
-        // // Logout user 
-        // public logout(req: Request, res: Response, next: NextFunction) {
-        //   res.status(200).json({ message: "User logged out successfully" });
-        // }
-        // // Update User's Taste Profile (protected)
-        // public async updateTasteProfile(req: AuthRequest, res: Response, next: NextFunction) {
-        //   const errors = validationResult(req);
-        //   if (!errors.isEmpty()) {
-        //     res.status(400).json({ errors: errors.array() });
-        //     return;
-        //   }
-        //   try {
-        //     const userId = req.params.id;
-        //     const tasteProfile = req.body.tasteProfile;
-        //     const user = await User.findById(userId);
-        //     if (!user) {
-        //       res.status(404).json({ message: "User not found" });
-        //       return;
-        //     }
-        //     user.tasteProfile = { ...user.tasteProfile, ...tasteProfile };
-        //     await user.save();
-        //     res.status(200).json({ message: "Taste Profile updated successfully", user });
-        //   } catch (error) {
-        //     console.error("Error updating taste profile", error);
-        //     res.status(500).json({ message: "Error updating taste profile" });
-        //   }
-        // }
     }
-    // Register user
     register(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e, _f;
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 res.status(400).json({ errors: errors.array() });
                 return;
             }
             try {
-                const { name, email, password } = req.body;
-                const response = yield axios_1.default.post(`${this.breweryApiUrl}/api/auth/Register`, {
-                    name,
-                    email,
-                    password,
-                });
-                res.status(201).json(response.data);
+                const response = yield axios_1.default.post(`${this.breweryApiUrl}/api/auth/register`, req.body);
+                res.status(201).json(response.data); // { id, email }
             }
             catch (error) {
-                console.error("Error registering user", ((_a = error.response) === null || _a === void 0 ? void 0 : _a.data) || error.message);
-                res.status(((_b = error.response) === null || _b === void 0 ? void 0 : _b.status) || 500).json({ message: ((_d = (_c = error.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.message) || "Error registering user" });
+                console.error("Error registering user:", ((_a = error.response) === null || _a === void 0 ? void 0 : _a.data) || error.message);
+                res.status(((_b = error.response) === null || _b === void 0 ? void 0 : _b.status) || 500).json({
+                    message: ((_d = (_c = error.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.message) || "Error registering user",
+                    error: ((_f = (_e = error.response) === null || _e === void 0 ? void 0 : _e.data) === null || _f === void 0 ? void 0 : _f.errors) || error.message,
+                });
             }
         });
     }
     login(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e, _f;
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 res.status(400).json({ errors: errors.array() });
                 return;
             }
             try {
-                const { email, password } = req.body;
-                const response = yield axios_1.default.post(`${this.breweryApiUrl}/api/auth/Login`, {
-                    email,
-                    password,
-                });
-                res.status(200).json(response.data);
+                const response = yield axios_1.default.post(`${this.breweryApiUrl}/api/auth/login`, req.body);
+                res.status(200).json(response.data); // { token }
             }
             catch (error) {
-                console.error("Error logging in user", ((_a = error.response) === null || _a === void 0 ? void 0 : _a.data) || error.message);
-                res.status(((_b = error.response) === null || _b === void 0 ? void 0 : _b.status) || 500).json({ message: ((_d = (_c = error.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.message) || "Error logging in" });
+                console.error("Error logging in:", ((_a = error.response) === null || _a === void 0 ? void 0 : _a.data) || error.message);
+                res.status(((_b = error.response) === null || _b === void 0 ? void 0 : _b.status) || 401).json({
+                    message: ((_d = (_c = error.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.message) || "Invalid credentials",
+                    error: ((_f = (_e = error.response) === null || _e === void 0 ? void 0 : _e.data) === null || _f === void 0 ? void 0 : _f.errors) || error.message,
+                });
+            }
+        });
+    }
+    getUserById(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f, _g;
+            try {
+                const response = yield axios_1.default.get(`${this.breweryApiUrl}/api/auth/${req.params.id}`);
+                if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) !== response.data.id) {
+                    res.status(403).json({ message: "Unauthorized" });
+                    return;
+                }
+                res.status(200).json(response.data); // { id, email, name, tasteProfile }
+            }
+            catch (error) {
+                console.error("Error fetching user:", ((_b = error.response) === null || _b === void 0 ? void 0 : _b.data) || error.message);
+                res.status(((_c = error.response) === null || _c === void 0 ? void 0 : _c.status) || 404).json({
+                    message: ((_e = (_d = error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "User not found",
+                    error: ((_g = (_f = error.response) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.errors) || error.message,
+                });
+            }
+        });
+    }
+    logout(req, res, next) {
+        // Since JWT is stateless, logout is client-side (discard token)
+        res.status(200).json({ message: "User logged out successfully" });
+    }
+    updateTasteProfile(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f, _g;
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                res.status(400).json({ errors: errors.array() });
+                return;
+            }
+            try {
+                const response = yield axios_1.default.put(`${this.breweryApiUrl}/api/auth/${req.params.id}/taste-profile`, req.body);
+                if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) !== req.params.id) {
+                    res.status(403).json({ message: "Unauthorized" });
+                    return;
+                }
+                res.status(200).json({
+                    message: "Taste profile updated successfully",
+                    tasteProfile: response.data.tasteProfile,
+                });
+            }
+            catch (error) {
+                console.error("Error updating taste profile:", ((_b = error.response) === null || _b === void 0 ? void 0 : _b.data) || error.message);
+                res.status(((_c = error.response) === null || _c === void 0 ? void 0 : _c.status) || 500).json({
+                    message: ((_e = (_d = error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) ||
+                        "Error updating taste profile",
+                    error: ((_g = (_f = error.response) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.errors) || error.message,
+                });
+            }
+        });
+    }
+    getUserOrders(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f, _g;
+            try {
+                if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) !== req.params.id) {
+                    res.status(403).json({ message: "Unauthorized" });
+                    return;
+                }
+                const response = yield axios_1.default.get(`${this.breweryApiUrl}/api/order/user/${req.params.id}`);
+                res.status(200).json(response.data); // Assuming array of orders
+            }
+            catch (error) {
+                console.error("Error fetching user orders:", ((_b = error.response) === null || _b === void 0 ? void 0 : _b.data) || error.message);
+                res.status(((_c = error.response) === null || _c === void 0 ? void 0 : _c.status) || 500).json({
+                    message: ((_e = (_d = error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "Error fetching orders",
+                    error: ((_g = (_f = error.response) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.errors) || error.message,
+                });
             }
         });
     }

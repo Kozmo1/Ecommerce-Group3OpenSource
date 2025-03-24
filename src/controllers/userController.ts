@@ -3,12 +3,39 @@ import axios from "axios";
 import { validationResult } from "express-validator";
 import { config } from "../config/config";
 import { AuthRequest } from "../middleware/auth";
-import jwt from "jsonwebtoken";
+
+// Define response types for clarity
+interface AuthResponse {
+	id: string;
+	email: string;
+}
+
+interface LoginResponse {
+	token: string;
+}
+
+interface UserResponse {
+	id: string;
+	email: string;
+	name: string;
+	tasteProfile: {
+		primaryFlavor?: string;
+		sweetness?: string;
+		bitterness?: string;
+	} | null;
+}
+
+interface TasteProfileResponse {
+	tasteProfile: {
+		primaryFlavor?: string;
+		sweetness?: string;
+		bitterness?: string;
+	};
+}
 
 export class UserController {
 	private readonly breweryApiUrl = config.breweryApiUrl;
-	private readonly jwtSecret = config.jwtSecret;
-	// Register user
+
 	public async register(
 		req: Request,
 		res: Response,
@@ -19,21 +46,13 @@ export class UserController {
 			res.status(400).json({ errors: errors.array() });
 			return;
 		}
+
 		try {
-			const response = await axios.post<{ id: string; email: string }>(
+			const response = await axios.post<AuthResponse>(
 				`${this.breweryApiUrl}/api/auth/register`,
 				req.body
 			);
-			const token = jwt.sign(
-				{
-					id: (response.data as { id: string; email: string }).id,
-					email: (response.data as { id: string; email: string })
-						.email,
-				},
-				this.jwtSecret,
-				{ expiresIn: "1h" }
-			);
-			res.status(201).json({ token });
+			res.status(201).json(response.data); // { id, email }
 		} catch (error: any) {
 			console.error(
 				"Error registering user:",
@@ -59,16 +78,11 @@ export class UserController {
 		}
 
 		try {
-			const response = await axios.post<{ id: string; email: string }>(
+			const response = await axios.post<LoginResponse>(
 				`${this.breweryApiUrl}/api/auth/login`,
 				req.body
 			);
-			const token = jwt.sign(
-				{ id: response.data.id, email: response.data.email },
-				this.jwtSecret,
-				{ expiresIn: "1h" }
-			);
-			res.status(200).json({ token });
+			res.status(200).json(response.data); // { token }
 		} catch (error: any) {
 			console.error(
 				"Error logging in:",
@@ -80,20 +94,21 @@ export class UserController {
 			});
 		}
 	}
+
 	async getUserById(
 		req: AuthRequest,
 		res: Response,
 		next: NextFunction
 	): Promise<void> {
 		try {
-			const response = await axios.get<{ id: string }>(
+			const response = await axios.get<UserResponse>(
 				`${this.breweryApiUrl}/api/auth/${req.params.id}`
 			);
 			if (req.user?.id !== response.data.id) {
 				res.status(403).json({ message: "Unauthorized" });
 				return;
 			}
-			res.status(200).json(response.data);
+			res.status(200).json(response.data); // { id, email, name, tasteProfile }
 		} catch (error: any) {
 			console.error(
 				"Error fetching user:",
@@ -106,10 +121,11 @@ export class UserController {
 		}
 	}
 
-	// Logout user
-	public logout(req: Request, res: Response, next: NextFunction) {
+	public logout(req: Request, res: Response, next: NextFunction): void {
+		// Since JWT is stateless, logout is client-side (discard token)
 		res.status(200).json({ message: "User logged out successfully" });
 	}
+
 	async updateTasteProfile(
 		req: AuthRequest,
 		res: Response,
@@ -122,7 +138,7 @@ export class UserController {
 		}
 
 		try {
-			const response = await axios.put<{ tasteProfile: any }>(
+			const response = await axios.put<TasteProfileResponse>(
 				`${this.breweryApiUrl}/api/auth/${req.params.id}/taste-profile`,
 				req.body
 			);
@@ -161,7 +177,7 @@ export class UserController {
 			const response = await axios.get(
 				`${this.breweryApiUrl}/api/order/user/${req.params.id}`
 			);
-			res.status(200).json(response.data);
+			res.status(200).json(response.data); // Assuming array of orders
 		} catch (error: any) {
 			console.error(
 				"Error fetching user orders:",
