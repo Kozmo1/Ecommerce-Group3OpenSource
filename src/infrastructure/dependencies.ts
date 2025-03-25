@@ -1,7 +1,14 @@
-import {config} from "../config/config"; 
+import { config, Config } from "../config/config";
+import axios from "axios";
 
-const dependencies = { // Export the dependencies object
-    config,
+export interface Dependencies {
+	config: Config;
+	httpClient: typeof axios;
+}
+
+const dependencies: Dependencies = {
+	config,
+	httpClient: axios,
 };
 
 export default dependencies;
