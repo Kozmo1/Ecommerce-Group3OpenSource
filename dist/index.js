@@ -7,14 +7,15 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_safe_1 = __importDefault(require("dotenv-safe"));
 const user_1 = __importDefault(require("./ports/rest/routes/user"));
+const config_1 = require("./config/config");
 const app = (0, express_1.default)();
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 dotenv_safe_1.default.config({
     allowEmptyValues: true,
-    path: `.env.${process.env.NODE_ENV || 'local'}`,
-    example: '.env.example'
+    path: `.env.${process.env.NODE_ENV || "local"}`,
+    example: ".env.example",
 });
 const port = process.env.PORT || 3000;
 app.use("/healthcheck", (req, res) => {
@@ -22,5 +23,5 @@ app.use("/healthcheck", (req, res) => {
 });
 app.use("/user", user_1.default);
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${config_1.config.port}`);
 });

@@ -24,5 +24,6 @@ app.use("/healthcheck", (req, res) => {
 app.use("/user", userRoutes);
 
 app.listen(port, () => {
+	
 	console.log(`Server is running on port ${config.port}`);
 });
