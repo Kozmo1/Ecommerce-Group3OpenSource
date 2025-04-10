@@ -164,5 +164,26 @@ class UserController {
             }
         });
     }
+    getProfile(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f, _g;
+            // 1. Check authorization
+            if (!((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) || req.user.id !== req.params.id) {
+                res.status(403).json({ message: "Unauthorized" });
+                return;
+            }
+            try {
+                const response = yield axios_1.default.get(`${this.breweryApiUrl}/api/auth/${req.params.id}/profile`);
+                res.status(200).json(response.data);
+            }
+            catch (error) {
+                console.error("Error fetching user profile:", ((_b = error.response) === null || _b === void 0 ? void 0 : _b.data) || error.message);
+                res.status(((_c = error.response) === null || _c === void 0 ? void 0 : _c.status) || 500).json({
+                    message: ((_e = (_d = error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "Error fetching user profile",
+                    error: ((_g = (_f = error.response) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.errors) || error.message,
+                });
+            }
+        });
+    }
 }
 exports.UserController = UserController;

@@ -74,4 +74,11 @@ router.get(
 		userController.getUserOrders(req, res, next)
 );
 
+router.get(
+	"/:id/profile",
+	verifyToken,
+	(req: AuthRequest, res: Response, next: NextFunction) =>
+	  userController.getProfile(req, res, next)
+  );
+
 export = router;

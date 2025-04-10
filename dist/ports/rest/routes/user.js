@@ -37,4 +37,5 @@ router.put("/:id/taste-profile", auth_1.verifyToken, (0, express_validator_1.bod
 router.post("/logout", (req, res, next) => userController.logout(req, res, next));
 // Get user orders
 router.get("/:id/orders", auth_1.verifyToken, (req, res, next) => userController.getUserOrders(req, res, next));
+router.get("/:id/profile", auth_1.verifyToken, (req, res, next) => userController.getProfile(req, res, next));
 module.exports = router;

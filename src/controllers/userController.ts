@@ -10,6 +10,16 @@ interface AuthResponse {
 	email: string;
 }
 
+interface ProfileResponse {
+	Name: string;
+	shippingAddress: {
+	  street: string;
+	  city: string;
+	  province: string;
+	  postalCode: string;
+	} | null;
+  }
+
 interface LoginResponse {
 	token: string;
 }
@@ -220,4 +230,34 @@ export class UserController {
 			});
 		}
 	}
+
+
+	async getProfile(
+		req: AuthRequest,
+		res: Response,
+		next: NextFunction
+	  ): Promise<void> {
+		// 1. Check authorization
+		if (!req.user?.id || req.user.id !== req.params.id) {
+		  res.status(403).json({ message: "Unauthorized" });
+		  return;
+		}
+	
+		try {
+		  const response = await axios.get<ProfileResponse>(
+			`${this.breweryApiUrl}/api/auth/${req.params.id}/profile`
+		  );
+	
+		  res.status(200).json(response.data);
+		} catch (error: any) {
+		  console.error(
+			"Error fetching user profile:",
+			error.response?.data || error.message
+		  );
+		  res.status(error.response?.status || 500).json({
+			message: error.response?.data?.message || "Error fetching user profile",
+			error: error.response?.data?.errors || error.message,
+		  });
+		}
+	  }
 }
