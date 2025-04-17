@@ -4,21 +4,59 @@ import axios from "axios";
 import { config } from "../config/config";
 import { AuthRequest } from "../middleware/auth";
 
-// I’m setting up some interfaces to keep my responses clear and tidy
 interface AuthResponse {
 	id: string;
 	email: string;
 }
 
-interface ProfileResponse {
-	Name: string;
+export interface ProfileResponse {
+	name: string;
 	shippingAddress: {
 	  street: string;
 	  city: string;
 	  province: string;
 	  postalCode: string;
 	} | null;
+	tasteProfile: {
+	  primaryFlavor?: string;
+	  secondaryFlavors?: string;
+	  sweetness?: string;
+	  bitterness?: string;
+	  mouthfeel?: string;
+	  body?: string;
+	  acidity?: number;
+	  aftertaste?: string;
+	  aroma?: string;
+	} | null;
+	orders: {
+	  id: number;
+	  orderDate: string;
+	  deliveryDate: string | null;
+	  status: string;
+	  totalPrice: number;
+	  shippingAddress: {
+		street: string;
+		city: string;
+		province: string;
+		postalCode: string;
+	  };
+	  items: {
+		id: number;
+		product: string;
+		quantity: number;
+		priceAtOrder: number;
+	  }[];
+	}[];
+	payments: {
+	  paymentId: number;
+	  orderId: number;
+	  amount: number;
+	  paymentMethod: string;
+	  status: string;
+	  processedAt: string;
+	}[];
   }
+  
 
 interface LoginResponse {
 	token: string;
